@@ -1,0 +1,8 @@
+DirectFB2-tools is built using Meson and Ninja:
+
+  $ meson build/
+  $ ninja -C build/
+
+Finally, you can install DirectFB2-tools using:
+
+  $ ninja -C build/ install
