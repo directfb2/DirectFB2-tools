@@ -1,3 +1,24 @@
+commit 89ebd5c1dba78eb958dd1f6dd145999710100433
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun Jan 15 10:37:40 2023 +0100
+
+    Add fsvolume
+
+commit 5ad91ce1a8c7775eca2a4e9f8056d6b67bac01dd
+Merge: a62c749 b35fdea
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Sat Dec 3 08:08:08 2022 +0100
+
+    Merge pull request #1 from caramelli/master
+    
+    DirectFB tools
+
+commit b35fdea181b29423d7183e5bb696b161fc28f24b
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sat Dec 3 07:39:30 2022 +0100
+
+    Add ChangeLog
+
 commit e390f0a0bb746f1a55f53417db95890919eaceac
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Sat Dec 3 07:36:49 2022 +0100
