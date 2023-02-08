@@ -19,6 +19,11 @@ project('DirectFB2-tools', 'c',
 
 directfb_dep = dependency('directfb')
 
+divine_dep = dependency('divine', required: false)
+if divine_dep.found()
+  libm_dep = meson.get_compiler('c').find_library('m')
+endif
+
 fusionsound_dep = dependency('fusionsound', required: false)
 
 subdir('src')

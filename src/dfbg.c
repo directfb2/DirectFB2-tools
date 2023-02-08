@@ -20,85 +20,12 @@
 
 /**********************************************************************************************************************/
 
-static IDirectFB             *dfb   = NULL;
-static IDirectFBDisplayLayer *layer = NULL;
+static IDirectFB             *dfb;
+static IDirectFBDisplayLayer *layer;
 
 static const char *background    = NULL;
 static DFBBoolean  tiled         = DFB_FALSE;
 static DFBBoolean  premultiplied = DFB_FALSE;
-
-static DFBBoolean parse_command_line  ( int argc, char *argv[] );
-static void       set_background_color( u32 argb );
-static void       set_background_image( const char *filename );
-
-/**********************************************************************************************************************/
-
-int main( int argc, char *argv[] )
-{
-     DFBResult ret;
-
-     /* Initialize DirectFB including command line parsing. */
-     ret = DirectFBInit( &argc, &argv );
-     if (ret) {
-          DirectFBError( "DirectFBInit() failed", ret );
-          return -1;
-     }
-
-     /* Parse the command line. */
-     if (!parse_command_line( argc, argv ))
-          return -2;
-
-     DirectFBSetOption( "bg-none", NULL );
-     DirectFBSetOption( "no-cursor", NULL );
-
-     /* Create the main interface. */
-     ret = DirectFBCreate( &dfb );
-     if (ret) {
-          DirectFBError( "DirectFBCreate() failed", ret );
-          return -3;
-     }
-
-     /* Get the primary display layer. */
-     ret = dfb->GetDisplayLayer( dfb, DLID_PRIMARY, &layer );
-     if (ret) {
-          DirectFBError( "GetDisplayLayer() failed", ret );
-          dfb->Release( dfb );
-          return -4;
-     }
-
-     /* Acquire administrative cooperative level. */
-     ret = layer->SetCooperativeLevel( layer, DLSCL_ADMINISTRATIVE );
-     if (ret) {
-          DirectFBError( "SetCooperativeLevel() failed", ret );
-          layer->Release( layer );
-          dfb->Release( dfb );
-          return -5;
-     }
-
-     /* Set the background as desired by the user. */
-     if (access( background, R_OK ) == DR_OK) {
-          set_background_image( background );
-     }
-     else {
-          u32   argb;
-          char *error;
-
-          argb = strtoul( background, &error, 16 );
-
-          if (!*error)
-               set_background_color( argb );
-          else
-               fprintf( stderr, "Invalid image file or characters in color string!\n" );
-     }
-
-     /* Release the primary display layer. */
-     layer->Release( layer );
-
-     /* Release the main interface. */
-     dfb->Release( dfb );
-
-     return 0;
-}
 
 /**********************************************************************************************************************/
 
@@ -240,4 +167,73 @@ static void set_background_image( const char *filename )
 
      surface->Release( surface );
      provider->Release( provider );
+}
+
+/**********************************************************************************************************************/
+
+int main( int argc, char *argv[] )
+{
+     DFBResult ret;
+
+     /* Initialize DirectFB including command line parsing. */
+     ret = DirectFBInit( &argc, &argv );
+     if (ret) {
+          DirectFBError( "DirectFBInit() failed", ret );
+          return -1;
+     }
+
+     /* Parse the command line. */
+     if (!parse_command_line( argc, argv ))
+          return -2;
+
+     DirectFBSetOption( "bg-none", NULL );
+     DirectFBSetOption( "no-cursor", NULL );
+
+     /* Create the main interface. */
+     ret = DirectFBCreate( &dfb );
+     if (ret) {
+          DirectFBError( "DirectFBCreate() failed", ret );
+          return -3;
+     }
+
+     /* Get the primary display layer. */
+     ret = dfb->GetDisplayLayer( dfb, DLID_PRIMARY, &layer );
+     if (ret) {
+          DirectFBError( "GetDisplayLayer() failed", ret );
+          dfb->Release( dfb );
+          return -4;
+     }
+
+     /* Acquire administrative cooperative level. */
+     ret = layer->SetCooperativeLevel( layer, DLSCL_ADMINISTRATIVE );
+     if (ret) {
+          DirectFBError( "SetCooperativeLevel() failed", ret );
+          layer->Release( layer );
+          dfb->Release( dfb );
+          return -5;
+     }
+
+     /* Set the background as desired by the user. */
+     if (access( background, R_OK ) == DR_OK) {
+          set_background_image( background );
+     }
+     else {
+          u32   argb;
+          char *error;
+
+          argb = strtoul( background, &error, 16 );
+
+          if (!*error)
+               set_background_color( argb );
+          else
+               fprintf( stderr, "Invalid image file or characters in color string!\n" );
+     }
+
+     /* Release the primary display layer. */
+     layer->Release( layer );
+
+     /* Release the main interface. */
+     dfb->Release( dfb );
+
+     return 0;
 }
