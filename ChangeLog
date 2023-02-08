@@ -1,3 +1,24 @@
+commit eafe1b9c3e87ec06392c1e3aebc26bc44c82cefd
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Wed Feb 8 16:16:12 2023 +0100
+
+    Add spooky to generate virtual input events
+
+commit 6dd7da325156993acdc135750d520b78cd19f8ee
+Merge: 5ad91ce 0f1c1c1
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Sun Jan 15 10:39:34 2023 +0100
+
+    Merge pull request #2 from caramelli/master
+    
+    Add fsvolume
+
+commit 0f1c1c136f84c56de0bd71db120da798d005169b
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun Jan 15 10:37:47 2023 +0100
+
+    Update ChangeLog
+
 commit 89ebd5c1dba78eb958dd1f6dd145999710100433
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Sun Jan 15 10:37:40 2023 +0100
