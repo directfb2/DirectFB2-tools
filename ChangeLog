@@ -1,3 +1,24 @@
+commit 7873087a05473c8d926c3096530b321343f45cac
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Fri Apr 7 19:33:11 2023 +0200
+
+    Add dfiffcolorkeying
+
+commit 96f906ff061f3ede52dd6d691393a9e84de4805a
+Merge: 6dd7da3 59e9777
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Wed Feb 8 16:57:43 2023 +0100
+
+    Merge pull request #3 from caramelli/master
+    
+    Add spooky to generate virtual input events
+
+commit 59e977791c80ad8006718cf96a7e17d26f923472
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Wed Feb 8 16:16:28 2023 +0100
+
+    Update ChangeLog
+
 commit eafe1b9c3e87ec06392c1e3aebc26bc44c82cefd
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Wed Feb 8 16:16:12 2023 +0100
