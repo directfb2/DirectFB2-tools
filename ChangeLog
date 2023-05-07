@@ -1,3 +1,24 @@
+commit bfe694c0d371cadd41d10933e04835c864075442
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun May 7 08:35:28 2023 +0200
+
+    Add dfvffinfo
+
+commit aee641563cf53cc4adf8f1d42836fa47d897a0ec
+Merge: 96f906f 932b6cb
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Fri Apr 7 19:38:45 2023 +0200
+
+    Merge pull request #4 from caramelli/master
+    
+    Add dfiffcolorkeying
+
+commit 932b6cbe3f12dc0db4a0b5baeb25200db0a51cb2
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Fri Apr 7 19:34:00 2023 +0200
+
+    Update ChangeLog
+
 commit 7873087a05473c8d926c3096530b321343f45cac
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Fri Apr 7 19:33:11 2023 +0200

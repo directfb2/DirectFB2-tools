@@ -35,8 +35,7 @@ int main( int argc, char *argv[] )
      /* Parse the command line. */
      if (argc != 4) {
           fprintf( stderr, "\nDirectFB Fast Image File Format Color Keying\n\n" );
-          fprintf( stderr, "Usage: %s <color> <colorkey> <image>\n", argv[0] );
-          fprintf( stderr, "\n" );
+          fprintf( stderr, "Usage: %s <color> <colorkey> <imagefile>\n\n", argv[0] );
           goto out;
      }
 

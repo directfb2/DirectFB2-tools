@@ -18,6 +18,7 @@ executable('dfbg',             'dfbg.c',             dependencies:  directfb_dep
 executable('dfbinfo',          'dfbinfo.c',          dependencies:  directfb_dep,          install: true)
 executable('dfiffinfo',        'dfiffinfo.c',        dependencies:  directfb_dep,          install: true)
 executable('dfiffcolorkeying', 'dfiffcolorkeying.c', dependencies:  directfb_dep,          install: true)
+executable('dfvffinfo',        'dfvffinfo.c',        dependencies:  directfb_dep,          install: true)
 
 if fusionsound_dep.found()
 executable('fsvolume',         'fsvolume.c',         dependencies:  fusionsound_dep,       install: true)

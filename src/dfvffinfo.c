@@ -16,7 +16,7 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
-#include <dfiff.h>
+#include <dfvff.h>
 #include <direct/filesystem.h>
 #include <directfb_util.h>
 
@@ -26,12 +26,12 @@ int main( int argc, char *argv[] )
 {
      DFBResult    ret;
      DirectFile   file;
-     DFIFFHeader *header;
+     DFVFFHeader *header;
 
      /* Parse the command line. */
      if (argc != 2) {
-          fprintf( stderr, "\nDirectFB Fast Image File Format Information\n\n" );
-          fprintf( stderr, "Usage: %s <imagefile>\n\n", argv[0] );
+          fprintf( stderr, "\nDirectFB Fast Video File Format Information\n\n" );
+          fprintf( stderr, "Usage: %s <videofile>\n\n", argv[0] );
           return 1;
      }
 
@@ -43,20 +43,21 @@ int main( int argc, char *argv[] )
      }
 
      /* Memory-mapped file. */
-     ret = direct_file_map( &file, NULL, 0, sizeof(DFIFFHeader), DFP_READ, (void**) &header );
+     ret = direct_file_map( &file, NULL, 0, sizeof(DFVFFHeader), DFP_READ, (void**) &header );
      if (ret) {
           fprintf( stderr, "Failed during mmap() of '%s'!\n", argv[1] );
           goto out;
      }
 
      /* Check the magic. */
-     if (strncmp( (const char*) header, "DFIFF", 5 )) {
+     if (strncmp( (const char*) header, "DFVFF", 5 )) {
           fprintf( stderr, "Bad magic in '%s'!\n", argv[1] );
           goto out;
      }
 
-     printf( "%s: %ux%u, %s\n", argv[1],
-             header->width, header->height, dfb_pixelformat_name( header->format ) );
+     printf( "%s: %ux%u, %s (%s), %u/%u fps\n", argv[1],
+             header->width, header->height, dfb_pixelformat_name( header->format ),
+             dfb_colorspace_name( header->colorspace ), header->framerate_num, header->framerate_den );
 
 out:
      direct_file_close( &file );
