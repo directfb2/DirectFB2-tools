@@ -19,6 +19,8 @@
 #include <dfvff.h>
 #include <direct/util.h>
 #include <directfb_strings.h>
+#include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
 
 static const DirectFBPixelFormatNames(format_names);
 static const DirectFBColorSpaceNames(colorspace_names);
@@ -234,68 +236,142 @@ static DFBBoolean parse_command_line( int argc, char *argv[] )
 
 /**********************************************************************************************************************/
 
-static DFBResult load_video( DFBSurfaceDescription *desc )
+static void *load_video( DFBSurfaceDescription *desc )
 {
-     int            frame_size;
-     FILE          *fp   = NULL;
-     unsigned char *data = NULL;
+     DFBSurfacePixelFormat  dest_format;
+     int                    frame_size;
+     void                  *handle;
+     FILE                  *fp      = NULL;
+     AVFormatContext       *fmt_ctx = NULL;
+     unsigned char         *data    = NULL;
 
      desc->flags = DSDESC_NONE;
 
-     if (!width || !height) {
-          fprintf( stderr, "No size specified!\n" );
-          goto out;
-     }
+     if (width && height) {
+          if (!fps_num) {
+               fprintf( stderr, "Specifying the frame rate is also required!\n" );
+               goto out;
+          }
 
-     if (!fps_num) {
-          fprintf( stderr, "Specifying the frame rate is also required!\n" );
-          goto out;
-     }
+          if (!format) {
+               fprintf( stderr, "No format specified!\n" );
+               goto out;
+          }
 
-     if (!format) {
-          fprintf( stderr, "No format specified!\n" );
-          goto out;
-     }
+          fp = fopen( filename, "rb" );
+          if (!fp) {
+               fprintf( stderr, "Failed to open '%s'!\n", filename );
+               goto out;
+          }
 
-     fp = fopen( filename, "rb" );
-     if (!fp) {
-          fprintf( stderr, "Failed to open '%s'!\n", filename );
-          goto out;
-     }
+          if (!colorspace)
+               colorspace = width >= 1280 || height > 576 ? DSCS_BT709 : DSCS_BT601;
 
-     if (!colorspace)
-          colorspace = width >= 1280 || height > 576 ? DSCS_BT709 : DSCS_BT601;
+          dest_format = format;
+          frame_size  = DFB_BYTES_PER_LINE( format, width ) * DFB_PLANE_MULTIPLY( format, height );
 
-     frame_size = DFB_BYTES_PER_LINE( format, width ) * DFB_PLANE_MULTIPLY( format, height );
+          data = malloc( frame_size );
+          if (!data) {
+               fprintf( stderr, "Failed to allocate %d bytes!\n", frame_size );
+               goto out;
+          }
+          else {
+               if (!nframes) {
+                    struct stat st;
 
-     data = malloc( frame_size );
-     if (!data) {
-          fprintf( stderr, "Failed to allocate %d bytes!\n", frame_size );
-          goto out;
+                    if (stat( filename, &st ) < 0) {
+                         fprintf( stderr, "Failed to get file status!\n" );
+                         goto out;
+                    }
+
+                    nframes = st.st_size / frame_size;
+               }
+          }
+
+          handle = fp;
      }
      else {
-          if (!nframes) {
-               struct stat st;
+          DFBSurfacePixelFormat src_format;
 
-               if (stat( filename, &st ) < 0) {
-                    fprintf( stderr, "Failed to get file status!\n" );
+          av_register_all();
+
+          if (avformat_open_input( &fmt_ctx, filename, NULL, NULL ) < 0) {
+               fprintf( stderr, "Failed to open '%s'!\n", filename );
+               goto out;
+          }
+
+          if (avformat_find_stream_info( fmt_ctx, NULL ) < 0) {
+               fprintf( stderr, "Couldn't find stream info!\n" );
+               goto out;
+          }
+
+          width   = fmt_ctx->streams[0]->codec->width;
+          height  = fmt_ctx->streams[0]->codec->height;
+          fps_num = fmt_ctx->streams[0]->avg_frame_rate.num;
+          fps_den = fmt_ctx->streams[0]->avg_frame_rate.den;
+
+          switch (fmt_ctx->streams[0]->codec->colorspace) {
+               case AVCOL_SPC_BT709:
+                    colorspace = DSCS_BT709;
+                    break;
+               case AVCOL_SPC_BT470BG:
+               case AVCOL_SPC_SMPTE170M:
+                    colorspace = DSCS_BT601;
+                    break;
+               case AVCOL_SPC_BT2020_NCL:
+                    colorspace = DSCS_BT2020;
+                    break;
+               default:
+                    colorspace = width >= 1280 || height > 576 ? DSCS_BT709 : DSCS_BT601;
+                    break;
+          }
+
+          switch (fmt_ctx->streams[0]->codec->pix_fmt) {
+               case AV_PIX_FMT_YUV420P:
+                    src_format = DSPF_I420;
+                    break;
+               case AV_PIX_FMT_YUV422P:
+                    src_format = DSPF_Y42B;
+                    break;
+               case AV_PIX_FMT_YUV444P:
+                    src_format = DSPF_Y444;
+                    break;
+               default:
+                    fprintf( stderr, "Invalid pixel format!\n" );
+                    goto out;
+          }
+
+          dest_format = format ?: src_format;
+          frame_size = DFB_BYTES_PER_LINE( dest_format, width ) * DFB_PLANE_MULTIPLY( dest_format, height );
+
+          data = malloc( frame_size );
+          if (!data) {
+               fprintf( stderr, "Failed to allocate %d bytes!\n", frame_size );
+               goto out;
+          }
+          else {
+               if (avcodec_open2( fmt_ctx->streams[0]->codec,
+                                  avcodec_find_decoder( fmt_ctx->streams[0]->codec->codec_id ), NULL)) {
+                    fprintf( stderr, "Failed to open video codec!\n" );
                     goto out;
                }
-
-               nframes = st.st_size / frame_size;
           }
+
+          handle = fmt_ctx;
      }
 
      desc->flags                 = DSDESC_WIDTH | DSDESC_HEIGHT | DSDESC_PIXELFORMAT | DSDESC_PREALLOCATED |
                                    DSDESC_COLORSPACE;
      desc->width                 = width;
      desc->height                = height;
-     desc->pixelformat           = format;
+     desc->pixelformat           = dest_format;
      desc->preallocated[0].data  = data;
      desc->preallocated[0].pitch = DFB_BYTES_PER_LINE( format, width );
      desc->colorspace            = colorspace;
 
-     data = NULL;
+     fp      = NULL;
+     fmt_ctx = NULL;
+     data    = NULL;
 
 out:
      if (data)
@@ -304,35 +380,100 @@ out:
      if (fp)
           fclose( fp );
 
-     return desc->flags ? DFB_OK : DFB_FAILURE;
+     if (fmt_ctx)
+          avformat_close_input( &fmt_ctx );
+
+     return desc->flags ? handle : NULL;
 }
 
-static void write_frames( DFBSurfaceDescription *desc )
+static void write_frames( void *handle, DFBSurfaceDescription *desc )
 {
-     int            frame_size;
-     unsigned long  frames_decoded;
-     FILE          *fp = NULL;
+     int                frame_size;
+     unsigned long      frames_decoded;
+     FILE              *fp      = NULL;
+     AVFormatContext   *fmt_ctx = NULL;
+     struct SwsContext *sws_ctx = NULL;
+     AVFrame           *frame   = NULL;
 
-     frame_size = DFB_BYTES_PER_LINE( format, width ) * DFB_PLANE_MULTIPLY( format, height );
+     frame_size = DFB_BYTES_PER_LINE( desc->pixelformat, width ) * DFB_PLANE_MULTIPLY( desc->pixelformat, height );
 
-     fp = fopen( filename, "rb" );
-     if (!fp) {
-          fprintf( stderr, "Failed to open '%s'!\n", filename );
-          goto out;
+     if (!avcodec_find_decoder_by_name( "h264" )) {
+          fp = handle;
+
+          for (frames_decoded = 0; frames_decoded < nframes; frames_decoded++) {
+               if (fread( desc->preallocated[0].data, 1, frame_size, fp ) != frame_size) {
+                   fprintf( stderr, "Failed to read raw file!\n" );
+                   goto out;
+               }
+
+               fwrite( desc->preallocated[0].data, 1, frame_size, stdout );
+          }
      }
+     else {
+          enum AVPixelFormat  pix_fmt;
+          AVPicture           picture;
+          AVPacket            pkt;
+          int                 got_frame = 0;
 
-     for (frames_decoded = 0; frames_decoded < nframes; frames_decoded++) {
-          if (fread( desc->preallocated[0].data, 1, frame_size, fp ) != frame_size) {
-              fprintf( stderr, "Failed to read raw file!\n" );
-              goto out;
+          fmt_ctx = handle;
+
+          switch (desc->pixelformat) {
+               case DSPF_I420:
+                    pix_fmt = AV_PIX_FMT_YUV420P;
+                    break;
+               case DSPF_Y42B:
+                    pix_fmt = AV_PIX_FMT_YUV422P;
+                    break;
+               case DSPF_Y444:
+                    pix_fmt = AV_PIX_FMT_YUV444P;
+                    break;
+               default:
+                    fprintf( stderr, "Unsupported format conversion!\n" );
+                    return;
           }
 
-          fwrite( desc->preallocated[0].data, 1, frame_size, stdout );
+          sws_ctx = sws_getContext( width, height, fmt_ctx->streams[0]->codec->pix_fmt, width, height, pix_fmt,
+                                    SWS_FAST_BILINEAR, NULL, NULL, NULL );
+
+          avpicture_fill( &picture, desc->preallocated[0].data, pix_fmt, width, height );
+
+          frame = av_frame_alloc();
+          if (!frame)
+               goto out;
+          else
+               frames_decoded = 0;
+
+          while (av_read_frame( fmt_ctx, &pkt ) >= 0) {
+               avcodec_decode_video2( fmt_ctx->streams[0]->codec, frame, &got_frame, &pkt );
+
+               av_free_packet( &pkt );
+
+               if (got_frame) {
+                    sws_scale( sws_ctx, (void*) frame->data, frame->linesize, 0, height, picture.data, picture.linesize );
+
+                    fwrite( desc->preallocated[0].data, 1, frame_size, stdout );
+
+                    frames_decoded++;
+                    if (frames_decoded == nframes)
+                         break;
+               }
+          }
      }
 
 out:
      if (fp)
           fclose( fp );
+
+     if (frame)
+          av_free( frame );
+
+     if (sws_ctx)
+          sws_freeContext( sws_ctx );
+
+     if (fmt_ctx) {
+          avcodec_close( fmt_ctx->streams[0]->codec );
+          avformat_close_input( &fmt_ctx );
+     }
 }
 
 /**********************************************************************************************************************/
@@ -346,14 +487,16 @@ static DFVFFHeader header = {
 
 int main( int argc, char *argv[] )
 {
-     int                   i, j;
-     DFBSurfaceDescription desc;
+     int                    i, j;
+     DFBSurfaceDescription  desc;
+     void                  *handle;
 
      /* Parse the command line. */
      if (!parse_command_line( argc, argv ))
           return -1;
 
-     if (load_video( &desc ))
+     handle = load_video( &desc );
+     if (!handle)
           return -2;
 
      for (i = 0; i < D_ARRAY_SIZE(format_names); i++) {
@@ -379,7 +522,7 @@ int main( int argc, char *argv[] )
 
      fwrite( &header, sizeof(header), 1, stdout );
 
-     write_frames( &desc );
+     write_frames( handle, &desc );
 
      free( desc.preallocated[0].data );
 

@@ -50,9 +50,11 @@ executable('mkdfiff', 'mkdfiff.c', c_args: endian_def,
            install: true)
 endif
 
+if enable_ffmpeg
 executable('mkdfvff', 'mkdfvff.c',
-           dependencies: directfb_dep,
+           dependencies: [directfb_dep, ffmpeg_dep],
            install: true)
+endif
 
 if enable_ft2
 executable('mkdgiff', 'mkdgiff.c', c_args: endian_def,
