@@ -14,16 +14,54 @@
 #  with this program; if not, write to the Free Software Foundation, Inc.,
 #  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-executable('dfbg',             'dfbg.c',             dependencies:  directfb_dep,          install: true)
-executable('dfbinfo',          'dfbinfo.c',          dependencies:  directfb_dep,          install: true)
-executable('dfiffinfo',        'dfiffinfo.c',        dependencies:  directfb_dep,          install: true)
-executable('dfiffcolorkeying', 'dfiffcolorkeying.c', dependencies:  directfb_dep,          install: true)
-executable('dfvffinfo',        'dfvffinfo.c',        dependencies:  directfb_dep,          install: true)
+executable('dfbg', 'dfbg.c',
+           dependencies: directfb_dep,
+           install: true)
+
+executable('dfbinfo', 'dfbinfo.c',
+           dependencies: directfb_dep,
+           install: true)
+
+executable('dfiffinfo', 'dfiffinfo.c',
+           dependencies: directfb_dep,
+           install: true)
+
+executable('dfiffcolorkeying', 'dfiffcolorkeying.c',
+           dependencies: directfb_dep,
+           install: true)
+
+executable('dfvffinfo', 'dfvffinfo.c',
+           dependencies: directfb_dep,
+           install: true)
+
+executable('directfb-csource', 'directfb-csource.c', c_args: png_def,
+           dependencies: [directfb_dep, png_dep],
+           install: true)
 
 if fusionsound_dep.found()
-executable('fsvolume',         'fsvolume.c',         dependencies:  fusionsound_dep,       install: true)
+executable('fsvolume', 'fsvolume.c',
+           dependencies: fusionsound_dep,
+           install: true)
+endif
+
+if enable_png
+executable('mkdfiff', 'mkdfiff.c', c_args: endian_def,
+           dependencies: [directfb_dep, png_dep],
+           install: true)
+endif
+
+executable('mkdfvff', 'mkdfvff.c',
+           dependencies: directfb_dep,
+           install: true)
+
+if enable_ft2
+executable('mkdgiff', 'mkdgiff.c', c_args: endian_def,
+           dependencies: [directfb_dep, ft2_dep],
+           install: true)
 endif
 
 if divine_dep.found()
-executable('spooky',           'spooky.c',           dependencies: [divine_dep, libm_dep], install: true)
+executable('spooky', 'spooky.c',
+           dependencies: [divine_dep, libm_dep],
+           install: true)
 endif
