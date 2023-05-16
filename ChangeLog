@@ -1,3 +1,39 @@
+commit 40e2703b8205a8c3d17d808f451cb9ec503685c1
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Tue May 16 06:21:20 2023 +0200
+
+    mkdfvff: Add FFmpeg support
+
+commit c1421028c62a9263747c824defdb2eb848a052a5
+Merge: 97d4b6e f58cc7e
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Tue May 16 06:17:45 2023 +0200
+
+    Merge pull request #6 from caramelli/master
+    
+    Add directfb-csource, mkdfiff, mkdfvff, mkdgiff
+
+commit f58cc7e36dcb588ede84dab111a6c6d9e86f2a4b
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Tue May 16 06:11:10 2023 +0200
+
+    Add directfb-csource, mkdfiff, mkdfvff, mkdgiff
+
+commit 97d4b6e249fb160902b05b6535aa8161651400b0
+Merge: aee6415 f2bbdc4
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Sun May 7 08:58:50 2023 +0200
+
+    Merge pull request #5 from caramelli/master
+    
+    Add dfvffinfo
+
+commit f2bbdc4fc5f20438d7361b99836282fffc091114
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun May 7 08:36:49 2023 +0200
+
+    Update ChangeLog
+
 commit bfe694c0d371cadd41d10933e04835c864075442
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Sun May 7 08:35:28 2023 +0200
