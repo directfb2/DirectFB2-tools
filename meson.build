@@ -31,8 +31,23 @@ endif
 
 fusionsound_dep = dependency('fusionsound', required: false)
 
-enable_ft2 = get_option('ft2')
-enable_png = get_option('png')
+enable_ffmpeg = get_option('ffmpeg')
+enable_ft2    = get_option('ft2')
+enable_png    = get_option('png')
+
+if enable_ffmpeg
+  ffmpeg_dep = [dependency('libavcodec',  required: false),
+                dependency('libavformat', required: false),
+                dependency('libavutil',   required: false),
+                dependency('libswscale',  required: false)]
+
+  foreach dep : ffmpeg_dep
+    if not dep.found()
+      enable_ffmpeg = false
+      break
+    endif
+  endforeach
+endif
 
 if enable_ft2
   ft2_dep = dependency('freetype2', required: false)
