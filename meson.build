@@ -17,7 +17,12 @@
 project('DirectFB2-tools', 'c',
         version: '2.0.0')
 
-directfb_dep = dependency('directfb')
+directfb_dep = dependency('directfb-internal')
+
+endian_def = []
+if host_machine.endian() == 'big'
+  endian_def = '-DWORDS_BIGENDIAN'
+endif
 
 divine_dep = dependency('divine', required: false)
 if divine_dep.found()
@@ -25,5 +30,28 @@ if divine_dep.found()
 endif
 
 fusionsound_dep = dependency('fusionsound', required: false)
+
+enable_ft2 = get_option('ft2')
+enable_png = get_option('png')
+
+if enable_ft2
+  ft2_dep = dependency('freetype2', required: false)
+
+  if not ft2_dep.found()
+    enable_ft2 = false
+  endif
+endif
+
+png_def = []
+png_dep = []
+if enable_png
+  png_dep = dependency('libpng', required: false)
+
+  if not png_dep.found()
+    enable_png = false
+  else
+    png_def = ['-DHAVE_PNG', endian_def]
+  endif
+endif
 
 subdir('src')
