@@ -34,10 +34,6 @@ executable('dfvffinfo', 'dfvffinfo.c',
            dependencies: directfb_dep,
            install: true)
 
-executable('directfb-csource', 'directfb-csource.c', c_args: png_def,
-           dependencies: [directfb_dep, png_dep],
-           install: true)
-
 if fusionsound_dep.found()
 executable('fsvolume', 'fsvolume.c',
            dependencies: fusionsound_dep,

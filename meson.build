@@ -57,15 +57,11 @@ if enable_ft2
   endif
 endif
 
-png_def = []
-png_dep = []
 if enable_png
   png_dep = dependency('libpng', required: false)
 
   if not png_dep.found()
     enable_png = false
-  else
-    png_def = ['-DHAVE_PNG', endian_def]
   endif
 endif
 

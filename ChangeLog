@@ -1,3 +1,24 @@
+commit 6c56a4dedbd3bf944e0d10fc9b88385213973b98
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Wed Jun 7 19:26:30 2023 +0200
+
+    Use a dedicated repository for the directfb-csource utility
+
+commit f4e6b457b95c81df028bbffdac549a6fdecb2f84
+Merge: c142102 d441c87
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Tue May 16 06:26:41 2023 +0200
+
+    Merge pull request #7 from caramelli/master
+    
+    mkdfvff: Add FFmpeg support
+
+commit d441c87acff9b96d4b337a1d9c845e45ca78d1f6
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Tue May 16 06:21:26 2023 +0200
+
+    Update ChangeLog
+
 commit 40e2703b8205a8c3d17d808f451cb9ec503685c1
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Tue May 16 06:21:20 2023 +0200
