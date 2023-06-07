@@ -53,7 +53,7 @@ static DFBEnumerationResult input_device_callback( DFBInputDeviceID id, DFBInput
      int i;
 
      /* Name */
-     printf( "Input Device (%02x) %-30s", id, desc.name );
+     printf( "Input Device (%02x) %-32s", id, desc.name );
 
      switch (id) {
           case DIDID_JOYSTICK:
@@ -78,7 +78,7 @@ static DFBEnumerationResult input_device_callback( DFBInputDeviceID id, DFBInput
      printf( "   Product ID: 0x%04x\n", (unsigned int) desc.product_id );
 
      /* Type */
-     printf( "   Type: " );
+     printf( "   Type:       " );
 
      for (i = 0; input_types[i].type; i++) {
           if (desc.type & input_types[i].type)
@@ -88,7 +88,7 @@ static DFBEnumerationResult input_device_callback( DFBInputDeviceID id, DFBInput
      printf( "\n" );
 
      /* Caps */
-     printf( "   Caps: " );
+     printf( "   Caps:       " );
 
      for (i = 0; input_caps[i].capability; i++) {
           if (desc.caps & input_caps[i].capability)
@@ -116,7 +116,7 @@ static DFBEnumerationResult display_layer_callback( DFBDisplayLayerID id, DFBDis
      int i;
 
      /* Name */
-     printf( "     Layer (%02x) %-30s", id, desc.name );
+     printf( "     Layer (%02x) %-34s", id, desc.name );
 
      switch (id) {
           case DLID_PRIMARY:
@@ -227,7 +227,7 @@ static void dump_mixers( IDirectFBScreen *screen, int num )
           printf( "   Mixer (%u) %s\n", i, descs[i].name );
 
           /* Caps */
-          printf( "     Caps:                    " );
+          printf( "     Caps:               " );
 
           for (n = 0; mixer_caps[n].capability; n++) {
                if (descs[i].caps & mixer_caps[n].capability)
@@ -238,7 +238,7 @@ static void dump_mixers( IDirectFBScreen *screen, int num )
 
           /* Full mode layers */
           if (descs[i].caps & DSMCAPS_FULL) {
-               printf( "     Layers (full mode):      " );
+               printf( "     Layers (full mode): " );
 
                for (n = 0; n < DFB_DISPLAYLAYER_IDS_MAX; n++) {
                     if (DFB_DISPLAYLAYER_IDS_HAVE( descs[i].layers, n ))
@@ -250,7 +250,7 @@ static void dump_mixers( IDirectFBScreen *screen, int num )
 
           /* Sub mode layers */
           if (descs[i].caps & DSMCAPS_SUB_LAYERS) {
-               printf( "     Layers (sub mode): %2d of ", descs[i].sub_num );
+               printf( "     Layers (sub mode):  %2d of ", descs[i].sub_num );
 
                for (n = 0; n < DFB_DISPLAYLAYER_IDS_MAX; n++) {
                     if (DFB_DISPLAYLAYER_IDS_HAVE( descs[i].sub_layers, n ))
@@ -262,8 +262,6 @@ static void dump_mixers( IDirectFBScreen *screen, int num )
 
           printf( "\n" );
      }
-
-     printf( "\n" );
 
      D_FREE( descs );
 }
@@ -292,7 +290,7 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
           printf( "   Encoder (%d) %s\n", i, descs[i].name );
 
           /* Type */
-          printf( "     Type:           " );
+          printf( "     Type:               " );
 
           for (n = 0; encoder_type[n].type; n++) {
                if (descs[i].type & encoder_type[n].type)
@@ -302,7 +300,7 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
           printf( "\n" );
 
           /* Caps */
-          printf( "     Caps:           " );
+          printf( "     Caps:               " );
 
           for (n = 0; encoder_caps[n].capability; n++) {
                if (descs[i].caps & encoder_caps[n].capability)
@@ -313,7 +311,7 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
 
           /* TV Standards */
           if (descs[i].caps & DSECAPS_TV_STANDARDS) {
-               printf( "     TV Standards:   " );
+               printf( "     TV Standards:       " );
 
                for (n = 0; tv_standards[n].standard; n++) {
                     if (descs[i].tv_standards & tv_standards[n].standard)
@@ -325,7 +323,7 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
 
           /* Output Signals */
           if (descs[i].caps & DSECAPS_OUT_SIGNALS) {
-               printf( "     Output Signals: " );
+               printf( "     Output Signals:     " );
 
                for (n = 0; signals[n].signal; n++) {
                     if (descs[i].out_signals & signals[n].signal)
@@ -349,7 +347,7 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
 
           /* Output Connectors */
           if (descs[i].caps & DSECAPS_CONNECTORS) {
-               printf( "     Output Connectors: " );
+               printf( "     Output Connectors:  " );
 
                for (n = 0; connectors[n].connector; n++) {
                     if (descs[i].all_connectors & connectors[n].connector)
@@ -361,7 +359,7 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
 
           /* Picture Framing */
           if (descs[i].caps & DSECAPS_FRAMING) {
-               printf( "     Framing:        " );
+               printf( "     Framing:            " );
 
                for (n = 0; framings[n].framing; n++) {
                     if (descs[i].all_framing & framings[n].framing)
@@ -379,12 +377,10 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
           }
 
           if (conf.flags & DSECONF_MIXER)
-               printf( "     Mixer:          %d\n", conf.mixer );
+               printf( "     Mixer:              %d\n", conf.mixer );
 
           printf( "\n" );
      }
-
-     printf( "\n" );
 
      D_FREE( descs );
 }
@@ -413,7 +409,7 @@ static void dump_outputs( IDirectFBScreen *screen, int num )
           printf( "   Output (%d) %s\n", i, descs[i].name );
 
           /* Caps */
-          printf( "     Caps:       " );
+          printf( "     Caps:               " );
 
           for (n = 0; output_caps[n].capability; n++) {
                if (descs[i].caps & output_caps[n].capability)
@@ -424,19 +420,19 @@ static void dump_outputs( IDirectFBScreen *screen, int num )
 
           /* Connectors */
           if (descs[i].caps & DSOCAPS_CONNECTORS) {
-              printf( "     Connectors: " );
+               printf( "     Connectors:         " );
 
-              for (n = 0; connectors[n].connector; n++) {
-                   if (descs[i].all_connectors & connectors[n].connector)
-                        printf( "%s ", connectors[n].name );
-              }
+               for (n = 0; connectors[n].connector; n++) {
+                    if (descs[i].all_connectors & connectors[n].connector)
+                         printf( "%s ", connectors[n].name );
+               }
 
-              printf( "\n" );
+               printf( "\n" );
           }
 
           /* Resolutions */
           if (descs[i].caps & DSOCAPS_RESOLUTION) {
-               printf( "     Resolutions: " );
+               printf( "     Resolutions:        " );
 
                for (n = 0; resolutions[n].resolution; n++) {
                     if (descs[i].all_resolutions & resolutions[n].resolution)
@@ -447,7 +443,7 @@ static void dump_outputs( IDirectFBScreen *screen, int num )
           }
 
           /* Signals */
-          printf( "     Signals:    " );
+          printf( "     Signals:            " );
 
           for (n = 0; signals[n].signal; n++) {
                if (descs[i].all_signals & signals[n].signal)
@@ -464,12 +460,10 @@ static void dump_outputs( IDirectFBScreen *screen, int num )
           }
 
           if (conf.flags & DSOCONF_ENCODER)
-               printf( "     Encoder:    %d\n", conf.encoder );
+               printf( "     Encoder:            %d\n", conf.encoder );
 
           printf( "\n" );
      }
-
-     printf( "\n" );
 
      D_FREE( descs );
 }
@@ -485,7 +479,7 @@ static DFBEnumerationResult screen_callback( DFBScreenID id, DFBScreenDescriptio
           DirectFBErrorFatal( "GetScreen() failed", ret );
 
      /* Name */
-     printf( "Screen (%02x) %-30s", id, desc.name );
+     printf( "Screen (%02x) %-38s", id, desc.name );
 
      switch (id) {
           case DSCID_PRIMARY:
@@ -540,9 +534,7 @@ static void enum_screens()
 
 static DFBEnumerationResult video_mode_callback( int width, int height, int bpp, void *arg )
 {
-     printf( "Video Mode %dx%d-%d\n", width, height, bpp );
-
-     printf( "\n" );
+     printf( "   %dx%d-%d\n", width, height, bpp );
 
      return DFENUM_OK;
 }
@@ -551,9 +543,13 @@ static void enum_video_modes()
 {
      DFBResult ret;
 
+     printf( "Video Modes\n" );
+
      ret = dfb->EnumVideoModes( dfb, video_mode_callback, NULL );
      if (ret)
           DirectFBError( "EnumVideoModes() failed", ret );
+
+     printf( "\n" );
 }
 
 /**********************************************************************************************************************/
