@@ -30,6 +30,10 @@ executable('dfiffcolorkeying', 'dfiffcolorkeying.c',
            dependencies: directfb_dep,
            install: true)
 
+executable('dflayerlevel', 'dflayerlevel.c',
+           dependencies: directfb_dep,
+           install: true)
+
 executable('dfvffinfo', 'dfvffinfo.c',
            dependencies: directfb_dep,
            install: true)

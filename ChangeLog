@@ -1,3 +1,24 @@
+commit ddb09761807b90c03be8d3a6a4dcbcc2ea215e5c
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Thu Jul 20 06:24:17 2023 +0200
+
+    Add dflayerlevel
+
+commit ac50cfd161a2f3aabd1b8d7047a5db0cf9bcddfc
+Merge: f4e6b45 5012798
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Wed Jun 7 22:17:40 2023 +0200
+
+    Merge pull request #8 from caramelli/master
+    
+    Use a dedicated repository for the directfb-csource utility
+
+commit 50127989e799a10034e120be9b8fe6a33007379f
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Wed Jun 7 19:26:39 2023 +0200
+
+    Update ChangeLog
+
 commit 6c56a4dedbd3bf944e0d10fc9b88385213973b98
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Wed Jun 7 19:26:30 2023 +0200
