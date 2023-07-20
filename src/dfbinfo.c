@@ -206,8 +206,8 @@ static void enum_display_layers( IDirectFBScreen *screen )
 
 static void dump_mixers( IDirectFBScreen *screen, int num )
 {
-     unsigned int               i, n;
      DFBResult                  ret;
+     unsigned int               i, n;
      DFBScreenMixerDescription *descs;
 
      descs = D_CALLOC( num, sizeof(*descs) );
@@ -268,10 +268,10 @@ static void dump_mixers( IDirectFBScreen *screen, int num )
 
 static void dump_encoders( IDirectFBScreen *screen, int num )
 {
-     int                          i, n;
      DFBResult                    ret;
-     DFBScreenEncoderDescription *descs;
+     int                          i, n;
      DFBScreenEncoderConfig       conf;
+     DFBScreenEncoderDescription *descs;
 
      descs = D_CALLOC( num, sizeof(*descs) );
      if (!descs) {
@@ -387,10 +387,10 @@ static void dump_encoders( IDirectFBScreen *screen, int num )
 
 static void dump_outputs( IDirectFBScreen *screen, int num )
 {
-     int                         i, n;
      DFBResult                   ret;
-     DFBScreenOutputDescription *descs;
+     int                         i, n;
      DFBScreenOutputConfig       conf;
+     DFBScreenOutputDescription *descs;
 
      descs = D_CALLOC( num, sizeof(*descs) );
      if (!descs) {
@@ -470,8 +470,8 @@ static void dump_outputs( IDirectFBScreen *screen, int num )
 
 static DFBEnumerationResult screen_callback( DFBScreenID id, DFBScreenDescription desc, void *arg )
 {
-     int              i;
      DFBResult        ret;
+     int              i;
      IDirectFBScreen *screen;
 
      ret = dfb->GetScreen( dfb, id, &screen );
